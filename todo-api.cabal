@@ -25,6 +25,8 @@ source-repository head
 library
   exposed-modules:
       Lib
+      Platform.AesonUtil
+      Platform.HTTP
   other-modules:
       Paths_todo_api
   hs-source-dirs:
