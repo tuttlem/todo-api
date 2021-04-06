@@ -13,7 +13,29 @@ import Network.Wai.Middleware.Cors
 
 import System.Environment
 
+import Data.Version
+import qualified Paths_todo_api
+import Platform.AesonUtil
+
 type App r m = (MonadIO m)
+
+data VersionInfo = VersionInfo
+    { versionInfoName :: String
+    , versionInfoVersion :: String
+    } deriving (Eq, Show)
+
+$(commonJSONDeriveMany
+  [ ''VersionInfo
+  ])
+
+getVersionInfo :: IO VersionInfo
+getVersionInfo = do
+    name <- getProgName
+    return VersionInfo { versionInfoName = name
+                       , versionInfoVersion = versionStr
+                       }
+  where versionStr = showVersion Paths_todo_api.version
+
 
 main :: (App r m) => (m Response -> IO Response) -> IO ()
 main runner = do
@@ -56,7 +78,8 @@ routes = do
     --
 
     -- health/info
-    get "/ver" $
-        json True
+    get "/ver" $ do
+        versionInfo <- liftIO getVersionInfo
+        json versionInfo
 
 
