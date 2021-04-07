@@ -5,17 +5,21 @@ module Lib
 import ClassyPrelude
 import Crypto.Random.Types (MonadRandom, getRandomBytes)
 
+import qualified Platform.PG as PG
+import qualified Platform.JWT as JWT
 import qualified Platform.HTTP as HTTP
 
 main :: IO ()
 main = do
     -- acquire resources
+    pgEnv <- PG.init
+    jwtEnv <- JWT.init
 
     -- start the application
-    let runner app = flip runReaderT () $ unAppT app
+    let runner app = flip runReaderT (pgEnv, jwtEnv) $ unAppT app
     HTTP.main runner
 
-type Env = ()
+type Env = (PG.Env, JWT.Env)
 
 newtype AppT a = AppT
     { unAppT :: ReaderT Env IO a

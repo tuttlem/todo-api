@@ -27,6 +27,8 @@ library
       Lib
       Platform.AesonUtil
       Platform.HTTP
+      Platform.JWT
+      Platform.PG
   other-modules:
       Paths_todo_api
   hs-source-dirs:
