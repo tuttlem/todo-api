@@ -9,6 +9,9 @@ import qualified Platform.PG as PG
 import qualified Platform.JWT as JWT
 import qualified Platform.HTTP as HTTP
 
+import qualified Feature.Auth.HTTP as AuthHTTP
+import qualified Feature.Auth.JWT as AuthJWT
+
 main :: IO ()
 main = do
     -- acquire resources
@@ -28,3 +31,6 @@ newtype AppT a = AppT
 
 instance MonadRandom AppT where
     getRandomBytes = liftIO . getRandomBytes
+
+instance AuthHTTP.Service AppT where
+    resolveToken = AuthJWT.resolveToken

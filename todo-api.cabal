@@ -24,6 +24,12 @@ source-repository head
 
 library
   exposed-modules:
+      Feature.Auth.HTTP
+      Feature.Auth.JWT
+      Feature.Auth.Types
+      Feature.Common.HTTP
+      Feature.Common.Types
+      Feature.Common.Util
       Lib
       Platform.AesonUtil
       Platform.HTTP

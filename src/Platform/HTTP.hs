@@ -11,13 +11,15 @@ import Network.Wai.Handler.WarpTLS (runTLS, tlsSettings)
 import Network.Wai.Handler.Warp (defaultSettings, setPort)
 import Network.Wai.Middleware.Cors
 
+import qualified Feature.Auth.HTTP as Auth
+
 import System.Environment
 
 import Data.Version
 import qualified Paths_todo_api
 import Platform.AesonUtil
 
-type App r m = (MonadIO m)
+type App r m = (Auth.Service m, MonadIO m)
 
 data VersionInfo = VersionInfo
     { versionInfoName :: String
