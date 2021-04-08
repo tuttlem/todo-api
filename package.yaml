@@ -60,7 +60,7 @@ library:
   - -Wredundant-constraints
 
 executables:
-  todo-api-exe:
+  todo-api:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
