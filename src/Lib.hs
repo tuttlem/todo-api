@@ -12,6 +12,9 @@ import qualified Platform.HTTP as HTTP
 import qualified Feature.Auth.HTTP as AuthHTTP
 import qualified Feature.Auth.JWT as AuthJWT
 
+import qualified Feature.Version.HTTP as VersionHTTP
+import qualified Feature.Version.Service as VersionService
+
 main :: IO ()
 main = do
     -- acquire resources
@@ -34,3 +37,6 @@ instance MonadRandom AppT where
 
 instance AuthHTTP.Service AppT where
     resolveToken = AuthJWT.resolveToken
+
+instance VersionHTTP.Service AppT where
+    getVersion = VersionService.getVersion

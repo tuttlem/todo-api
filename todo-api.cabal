@@ -30,7 +30,11 @@ library
       Feature.Common.HTTP
       Feature.Common.Types
       Feature.Common.Util
+      Feature.Version.HTTP
+      Feature.Version.Service
+      Feature.Version.Types
       Lib
+      Misc.Client
       Platform.AesonUtil
       Platform.HTTP
       Platform.JWT
@@ -79,7 +83,7 @@ library
     , wreq
   default-language: Haskell2010
 
-executable todo-api-exe
+executable todo-api
   main-is: Main.hs
   other-modules:
       Paths_todo_api

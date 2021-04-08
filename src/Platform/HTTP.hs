@@ -12,32 +12,11 @@ import Network.Wai.Handler.Warp (defaultSettings, setPort)
 import Network.Wai.Middleware.Cors
 
 import qualified Feature.Auth.HTTP as Auth
+import qualified Feature.Version.HTTP as Ver
 
 import System.Environment
 
-import Data.Version
-import qualified Paths_todo_api
-import Platform.AesonUtil
-
-type App r m = (Auth.Service m, MonadIO m)
-
-data VersionInfo = VersionInfo
-    { versionInfoName :: String
-    , versionInfoVersion :: String
-    } deriving (Eq, Show)
-
-$(commonJSONDeriveMany
-  [ ''VersionInfo
-  ])
-
-getVersionInfo :: IO VersionInfo
-getVersionInfo = do
-    name <- getProgName
-    return VersionInfo { versionInfoName = name
-                       , versionInfoVersion = versionStr
-                       }
-  where versionStr = showVersion Paths_todo_api.version
-
+type App r m = (Auth.Service m, Ver.Service m, MonadIO m)
 
 main :: (App r m) => (m Response -> IO Response) -> IO ()
 main runner = do
@@ -78,10 +57,6 @@ routes = do
 
     -- TODO: fill in feature routes here
     --
-
-    -- health/info
-    get "/ver" $ do
-        versionInfo <- liftIO getVersionInfo
-        json versionInfo
+    Ver.routes
 
 
