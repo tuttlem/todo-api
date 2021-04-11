@@ -65,6 +65,7 @@ library
     , classy-prelude
     , convertible
     , cryptonite
+    , data-default
     , data-has
     , digestive-functors
     , digestive-functors-aeson
@@ -83,6 +84,7 @@ library
     , time
     , wai
     , wai-cors
+    , wai-extra
     , warp
     , warp-tls
     , wreq
@@ -113,8 +115,10 @@ executable todo-api
 
 test-suite todo-api-test
   type: exitcode-stdio-1.0
-  main-is: Spec.hs
+  main-is: Main.hs
   other-modules:
+      Spec.Common
+      Spec.Version
       Paths_todo_api
   hs-source-dirs:
       test

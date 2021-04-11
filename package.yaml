@@ -44,6 +44,7 @@ library:
   - digestive-functors-aeson
   - lens
   - wai
+  - wai-extra
   - jose-jwt
   - cryptonite
   - slug
@@ -52,6 +53,7 @@ library:
   - template-haskell
   - wreq
   - http-client
+  - data-default
   ghc-options:
   - -Wall
   - -Werror
@@ -72,7 +74,7 @@ executables:
 
 tests:
   todo-api-test:
-    main:                Spec.hs
+    main:                Main.hs
     source-dirs:         test
     ghc-options:
     - -threaded
