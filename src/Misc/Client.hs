@@ -75,3 +75,5 @@ authHeader token = header "Authorization" .~ ["Token " <> fromString (unpack tok
 
 mayAuthHeader :: Maybe Token -> Network.Wreq.Options -> Network.Wreq.Options
 mayAuthHeader = maybe id authHeader
+
+

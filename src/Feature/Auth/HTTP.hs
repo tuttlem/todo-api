@@ -6,6 +6,7 @@ import Feature.Auth.Types
 import Feature.Common.Util (orThrow)
 import Feature.Common.HTTP
 
+import Data.Char (isSpace)
 import Control.Monad.Except
 import Web.Scotty.Trans
 import Network.HTTP.Types.Status
@@ -18,7 +19,7 @@ getCurrentUser = do
   mayHeaderVal <- header "Authorization"
   runExceptT $ do
     headerVal <- ExceptT $ pure mayHeaderVal `orThrow` TokenErrorNotFound
-    let token = toStrict $ drop 6 headerVal
+    let token = toStrict $ dropWhile isSpace $ drop 6 headerVal
     ExceptT $ lift $ resolveToken token
 
 optionalUser :: (Service m) => ActionT LText m (Maybe CurrentUser)

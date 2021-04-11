@@ -15,6 +15,11 @@ import qualified Feature.Auth.JWT as AuthJWT
 import qualified Feature.Version.HTTP as VersionHTTP
 import qualified Feature.Version.Service as VersionService
 
+import qualified Feature.User.HTTP as UserHTTP
+import qualified Feature.User.Service as UserService
+import qualified Feature.User.PG as UserPG
+import qualified Feature.User.JWT as UserJWT
+
 main :: IO ()
 main = do
     -- acquire resources
@@ -40,3 +45,28 @@ instance AuthHTTP.Service AppT where
 
 instance VersionHTTP.Service AppT where
     getVersion = VersionService.getVersion
+
+instance UserHTTP.Service AppT where
+    login = UserService.login
+    register = UserService.register
+    getUser = UserService.getUser
+    updateUser = UserService.updateUser
+    getProfile = UserService.getProfile
+    followUser = UserService.followUser
+    unfollowUser = UserService.unfollowUser
+
+instance UserService.UserRepo AppT where
+    findUserByAuth = UserPG.findUserByAuth
+    findUserById = UserPG.findUserById
+    addUser = UserPG.addUser
+    updateUserById = UserPG.updateUserById
+
+instance UserService.ProfileRepo AppT where
+    findProfile = UserPG.findProfile
+    followUserByUsername = UserPG.followUserByUsername
+    unfollowUserByUsername = UserPG.unfollowUserByUsername
+
+instance UserService.TokenRepo AppT where
+    generateToken = UserJWT.generateToken
+
+

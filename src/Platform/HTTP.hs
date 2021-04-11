@@ -13,10 +13,11 @@ import Network.Wai.Middleware.Cors
 
 import qualified Feature.Auth.HTTP as Auth
 import qualified Feature.Version.HTTP as Ver
+import qualified Feature.User.HTTP as User
 
 import System.Environment
 
-type App r m = (Auth.Service m, Ver.Service m, MonadIO m)
+type App r m = (Auth.Service m, Ver.Service m, User.Service m, MonadIO m)
 
 main :: (App r m) => (m Response -> IO Response) -> IO ()
 main runner = do
@@ -58,5 +59,5 @@ routes = do
     -- TODO: fill in feature routes here
     --
     Ver.routes
-
+    User.routes
 

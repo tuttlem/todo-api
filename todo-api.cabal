@@ -30,6 +30,11 @@ library
       Feature.Common.HTTP
       Feature.Common.Types
       Feature.Common.Util
+      Feature.User.HTTP
+      Feature.User.JWT
+      Feature.User.PG
+      Feature.User.Service
+      Feature.User.Types
       Feature.Version.HTTP
       Feature.Version.Service
       Feature.Version.Types
