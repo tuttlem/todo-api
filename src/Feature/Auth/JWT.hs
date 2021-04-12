@@ -15,7 +15,6 @@ import qualified Data.Aeson as Aeson
 
 resolveToken :: (JWT r m) => Token -> m (Either TokenError CurrentUser)
 resolveToken token = runExceptT $ do
-  putStrLn token
   jwks <- asks $ envJwks . getter
   eitherJwt <- lift $ decode jwks (Just $ JwsEncoding RS256) (encodeUtf8 token)
   curTime <- liftIO getPOSIXTime

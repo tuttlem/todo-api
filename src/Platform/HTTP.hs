@@ -4,15 +4,16 @@ module Platform.HTTP (
 
 import ClassyPrelude
 
--- import Data.Default
+import Data.Default
 import Web.Scotty.Trans
 import Network.HTTP.Types.Status
-import Network.Wai (Response)
+import Network.Wai (Response, Middleware)
 import Network.Wai.Handler.WarpTLS (runTLS, tlsSettings)
 import Network.Wai.Handler.Warp (defaultSettings, setPort)
 import Network.Wai.Middleware.Cors
 import Network.Wai.Middleware.RequestLogger 
--- import Network.Wai.Middleware.RequestLogger.JSON
+import Network.Wai.Middleware.RequestLogger.JSON
+import System.IO.Unsafe
 
 import qualified Feature.Auth.HTTP as Auth
 import qualified Feature.Version.HTTP as Ver
@@ -44,15 +45,21 @@ main runner = do
                         then Just $ tlsSettings "secrets/tls/certificate.pem" "secrets/tls/key.pem"
                         else Nothing
 
--- jsonRequestLogger :: IO Middleware
+-- jsonRequestLogger :: (MonadIO m) => m Middleware
 -- jsonRequestLogger =
-    -- mkRequestLogger $ def { outputFormat = CustomOutputFormatWithDetails formatAsJSON }
+    -- liftIO $ mkRequestLogger $ def { outputFormat = CustomOutputFormatWithDetails formatAsJSON }
+
+jsonRequestLogger' :: Middleware
+jsonRequestLogger' =
+    unsafePerformIO $ mkRequestLogger $ def { outputFormat = CustomOutputFormatWithDetails formatAsJSON }
 
 routes :: (App r m) => ScottyT LText m ()
 routes = do
     -- middlewares
-    -- middleware jsonRequestLogger
-    middleware logStdoutDev
+    -- logger <- jsonRequestLogger
+    middleware jsonRequestLogger'
+
+    -- middleware logStdoutDev
     middleware $ cors $ const $ Just simpleCorsResourcePolicy
         { corsRequestHeaders = "Authorization":simpleHeaders
         , corsMethods = "PUT":"DELETE":simpleMethods
