@@ -17,10 +17,11 @@ import Network.Wai.Middleware.RequestLogger.JSON
 import qualified Feature.Auth.HTTP as Auth
 import qualified Feature.Version.HTTP as Ver
 import qualified Feature.User.HTTP as User
+import qualified Feature.Item.HTTP as Item
 
 import System.Environment
 
-type App r m = (Auth.Service m, Ver.Service m, User.Service m, MonadIO m)
+type App r m = (Auth.Service m, Ver.Service m, User.Service m, Item.Service m, MonadIO m)
 
 jsonRequestLogger :: (MonadIO m) => m Middleware
 jsonRequestLogger =
@@ -71,4 +72,4 @@ routes logger = do
     --
     Ver.routes
     User.routes
-
+    Item.routes

@@ -20,6 +20,10 @@ import qualified Feature.User.Service as UserService
 import qualified Feature.User.PG as UserPG
 import qualified Feature.User.JWT as UserJWT
 
+import qualified Feature.Item.HTTP as ItemHTTP
+import qualified Feature.Item.Service as ItemService
+import qualified Feature.Item.PG as ItemPG
+
 main :: IO ()
 main = do
     -- acquire resources
@@ -46,6 +50,9 @@ instance AuthHTTP.Service AppT where
 instance VersionHTTP.Service AppT where
     getVersion = VersionService.getVersion
 
+instance ItemHTTP.Service AppT where
+    listItems = ItemService.listItems
+
 instance UserHTTP.Service AppT where
     login = UserService.login
     register = UserService.register
@@ -69,4 +76,5 @@ instance UserService.ProfileRepo AppT where
 instance UserService.TokenRepo AppT where
     generateToken = UserJWT.generateToken
 
-
+instance ItemService.ItemRepo AppT where
+    listItemsByUser = ItemPG.listItemsByUser

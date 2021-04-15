@@ -30,6 +30,10 @@ library
       Feature.Common.HTTP
       Feature.Common.Types
       Feature.Common.Util
+      Feature.Item.HTTP
+      Feature.Item.PG
+      Feature.Item.Service
+      Feature.Item.Types
       Feature.User.HTTP
       Feature.User.JWT
       Feature.User.PG
