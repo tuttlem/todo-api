@@ -13,7 +13,6 @@ import Network.Wai.Handler.Warp (defaultSettings, setPort)
 import Network.Wai.Middleware.Cors
 import Network.Wai.Middleware.RequestLogger 
 import Network.Wai.Middleware.RequestLogger.JSON
-import System.IO.Unsafe
 
 import qualified Feature.Auth.HTTP as Auth
 import qualified Feature.Version.HTTP as Ver
@@ -23,16 +22,21 @@ import System.Environment
 
 type App r m = (Auth.Service m, Ver.Service m, User.Service m, MonadIO m)
 
+jsonRequestLogger :: (MonadIO m) => m Middleware
+jsonRequestLogger =
+    liftIO $ mkRequestLogger $ def { outputFormat = CustomOutputFormatWithDetails formatAsJSON }
+
 main :: (App r m) => (m Response -> IO Response) -> IO ()
 main runner = do
     port <- acquirePort
     mayTLSSetting <- acquireTLSSetting
+    logger <- jsonRequestLogger
 
     case mayTLSSetting of
       Nothing ->
-          scottyT port runner routes
+          scottyT port runner $ routes logger
       Just tlsSetting -> do
-          app <- scottyAppT runner routes
+          app <- scottyAppT runner $ routes logger
           runTLS tlsSetting (setPort port defaultSettings) app
     where
         acquirePort = do
@@ -45,19 +49,10 @@ main runner = do
                         then Just $ tlsSettings "secrets/tls/certificate.pem" "secrets/tls/key.pem"
                         else Nothing
 
--- jsonRequestLogger :: (MonadIO m) => m Middleware
--- jsonRequestLogger =
-    -- liftIO $ mkRequestLogger $ def { outputFormat = CustomOutputFormatWithDetails formatAsJSON }
-
-jsonRequestLogger' :: Middleware
-jsonRequestLogger' =
-    unsafePerformIO $ mkRequestLogger $ def { outputFormat = CustomOutputFormatWithDetails formatAsJSON }
-
-routes :: (App r m) => ScottyT LText m ()
-routes = do
+routes :: (App r m) => Middleware -> ScottyT LText m ()
+routes logger = do
     -- middlewares
-    -- logger <- jsonRequestLogger
-    middleware jsonRequestLogger'
+    middleware logger
 
     -- middleware logStdoutDev
     middleware $ cors $ const $ Just simpleCorsResourcePolicy
